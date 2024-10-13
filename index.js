@@ -73,9 +73,10 @@ async function connector(Num, res) {
             } catch (error) {
                 console.error('Error:', error);
             } finally {
-                await delay(1000);
-               // fs.unlinkSync(pth);
-                fs.rmdirSync(sessionDir, { recursive: true });
+                //await delay(500);
+                if (fs.existsSync(path.join(__dirname, './session'))) {
+                    fs.rmdirSync(path.join(__dirname, './session'), { recursive: true });
+                }
             }
         } else if (connection === 'close') {
             var reason = lastDisconnect?.error?.output?.statusCode;
