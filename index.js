@@ -57,7 +57,7 @@ async function connector(Num, res) {
         if (connection === 'open') {
             console.log('Connected successfully');
             await delay(5000);
-            var myr = await session.sendMessage(session.user.id, { text: "Thank you for using our bot dont share your session id .etc" });
+            var myr = await session.sendMessage(session.user.id, { text: `${config.MESSAGE}` });
             var pth = './session/creds.json';
             try {
                 var url = await upload(pth);
@@ -67,8 +67,8 @@ async function connector(Num, res) {
                 } else {
                     sID = 'Fekd up';
                 }
-              //edit this you can add ur own image or don't add image anything it's upto you..
-              await session.sendMessage(session.user.id, { image: { url: "https://cdn.ironman.my.id/i/2iceb4.jpeg" }, caption: `*Session ID*\n\n${sID}` }, { quoted: myr });
+              //edit this you can add ur own image in config or not ur choice
+              await session.sendMessage(session.user.id, { image: { url: `${config.IMAGE}` }, caption: `*Session ID*\n\n${sID}` }, { quoted: myr });
             
             } catch (error) {
                 console.error('Error:', error);
