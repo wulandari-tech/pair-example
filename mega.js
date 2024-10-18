@@ -36,6 +36,9 @@ var upload = (pth) => {
 module.exports = { upload };
 
 /*
+* Inspired from 
+* https://github.com/Guru322/Express-pairing-code/blob/main/mega.js
+*
 * IN CASE IF YOUR LOOKING FOR MEDIA UPLOAD THEN HERE
 * (and dont wanna go through the docs of megajs then)
 *
