@@ -13,12 +13,14 @@ const {
 const { upload } = require('./mega');
 const { Mutex } = require('async-mutex');
 const config = require('./config');
+const path = require('path');
 
 var app = express();
 var port = 3000;
 var session;
 const msgRetryCounterCache = new NodeCache();
 const mutex = new Mutex();
+app.use(express.static(path.join(__dirname, 'static')));
 
 async function connector(Num, res) {
     var sessionDir = './session';
