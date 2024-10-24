@@ -40,14 +40,14 @@
 
                     if (res.ok) {
                         document.getElementById("output").innerHTML = `
-                        <p>Code: ${trim}</p>
-                        <button class="copy-btn" onclick="copyToClipboard('${trim}')">Copy to Clipboard</button>
+                        <p>Code: ${data.code}</p>
+                        <button class="copy-btn" onclick="copyToClipboard('${data.code}')">Copy to Clipboard</button>
                         <p id="copy-confirm" class="copy-confirm" style="display: none;">Copied!</p>
                     `;
                     } else {
                         document.getElementById(
                             "output"
-                        ).innerHTML = `<p>Error: ${data || data.error}</p>`;
+                        ).innerHTML = `<p>Error: fekd up</p>`;
                     }
                 } catch (error) {
                     document.getElementById(
