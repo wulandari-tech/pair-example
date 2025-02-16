@@ -1,3 +1,4 @@
+// USE ENVIRONMENT VARIABLES FOR EMAIL AND PASSWORD INSTEAD.
 module.exports = {
   PREFIX: process.env.PREFIX || "IRON-M4N×",
   EMAIL: process.env.EMAIL || "ironman@onlyfans.com",
