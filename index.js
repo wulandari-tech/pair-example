@@ -1,120 +1,106 @@
-const express = require('express');
-const fs = require('fs');
+const { default: makeWASocket, useMultiFileAuthState } = require("@whiskeysockets/baileys");
 const pino = require('pino');
-const NodeCache = require('node-cache');
-const {
-    default: makeWASocket,
-    useMultiFileAuthState,
-    delay,
-    Browsers,
-    makeCacheableSignalKeyStore,
-    DisconnectReason
-} = require('@whiskeysockets/baileys');
-const { upload } = require('./mega');
-const { Mutex } = require('async-mutex');
-const config = require('./config');
-const path = require('path');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var app = express();
-var port = 3000;
-var session;
-const msgRetryCounterCache = new NodeCache();
-const mutex = new Mutex();
-app.use(express.static(path.join(__dirname, 'static')));
+const app = express();
+const port = 3000; // Anda bisa mengganti port ini
 
-async function connector(Num, res) {
-    var sessionDir = './session';
-    if (!fs.existsSync(sessionDir)) {
-        fs.mkdirSync(sessionDir);
-    }
-    var { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+app.use(bodyParser.json());
+app.use(express.static('.')); // Melayani file statis (index.html) dari direktori saat ini
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html')); // Kirim file index.html
+});
+app.get('/wanzbrayy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html')); // Kirim file index.html
+});
 
-    session = makeWASocket({
-        auth: {
-            creds: state.creds,
-            keys: makeCacheableSignalKeyStore(state.keys, pino({ level: 'fatal' }).child({ level: 'fatal' }))
-        },
-        printQRInTerminal: false,
-        logger: pino({ level: 'fatal' }).child({ level: 'fatal' }),
-        browser: Browsers.macOS("Safari"), //check docs for more custom options
-        markOnlineOnConnect: true, //true or false yoour choice
-        msgRetryCounterCache
+async function KleeProject() {
+    const { state, saveCreds } = await useMultiFileAuthState('./auth_info'); //Simpan di folder auth_info
+    const KleeBotInc = makeWASocket({
+        logger: pino({ level: "info" }), // Aktifkan logging
+        printQRInTerminal: true, // Tampilkan QR Code DULU.  Setelah itu, matikan.
+        auth: state,
+        connectTimeoutMs: 60000,
+        defaultQueryTimeoutMs: 0,
+        keepAliveIntervalMs: 10000,
+        emitOwnEvents: true,
+        fireInitQueries: true,
+        generateHighQualityLinkPreview: true,
+        syncFullHistory: true,
+        markOnlineOnConnect: true,
+         browser: ["Ubuntu", "Chrome", "20.0.04"], // Optional
     });
 
-    if (!session.authState.creds.registered) {
-        await delay(1500);
-        Num = Num.replace(/[^0-9]/g, '');
-        var code = await session.requestPairingCode(Num);
-        if (!res.headersSent) {
-            res.send({ code: code?.match(/.{1,4}/g)?.join('-') });
-        }
-    }
-
-    session.ev.on('creds.update', async () => {
-        await saveCreds();
-    });
-
-    session.ev.on('connection.update', async (update) => {
-        var { connection, lastDisconnect } = update;
-        if (connection === 'open') {
-            console.log('Connected successfully');
-            await delay(5000);
-            var myr = await session.sendMessage(session.user.id, { text: `${config.MESSAGE}` });
-            var pth = './session/creds.json';
-            try {
-                var url = await upload(pth);
-                var sID;
-                if (url.includes("https://mega.nz/file/")) {
-                    sID = config.PREFIX + url.split("https://mega.nz/file/")[1];
-                } else {
-                    sID = 'Fekd up';
-                }
-              //edit this you can add ur own image in config or not ur choice
-              await session.sendMessage(session.user.id, { image: { url: `${config.IMAGE}` }, caption: `*Session ID*\n\n${sID}` }, { quoted: myr });
-            
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                //await delay(500);
-                if (fs.existsSync(path.join(__dirname, './session'))) {
-                    fs.rmdirSync(path.join(__dirname, './session'), { recursive: true });
-                }
+     KleeBotInc.ev.on('creds.update', saveCreds); //Simpan credentials
+     KleeBotInc.ev.on('connection.update', (update) => {
+        const { connection, lastDisconnect } = update;
+        if(connection === 'close') {
+             //Reconnect jika koneksi terputus.
+             const shouldReconnect = (lastDisconnect.error)?.output?.statusCode !== DisconnectReason.loggedOut;
+            console.log('connection closed due to ', lastDisconnect.error, ', reconnecting ', shouldReconnect);
+             if(shouldReconnect) {
+                KleeProject();
             }
-        } else if (connection === 'close') {
-            var reason = lastDisconnect?.error?.output?.statusCode;
-            reconn(reason);
+
+        } else if(connection === 'open') {
+            console.log('opened connection');
         }
     });
+    return KleeBotInc;
+
 }
 
-function reconn(reason) {
-    if ([DisconnectReason.connectionLost, DisconnectReason.connectionClosed, DisconnectReason.restartRequired].includes(reason)) {
-        console.log('Connection lost, reconnecting...');
-        connector();
-    } else {
-        console.log(`Disconnected! reason: ${reason}`);
-        session.end();
-    }
-}
 
-app.get('/pair', async (req, res) => {
-    var Num = req.query.code;
-    if (!Num) {
-        return res.status(418).json({ message: 'Phone number is required' });
+
+let KleeBotInstance; // Simpan instance di luar fungsi
+
+(async () => {
+    KleeBotInstance = await KleeProject(); //Inisialisasi instance
+})();
+
+
+
+app.post('/send-spam', async (req, res) => {
+    const { phoneNumber, spamCount } = req.body;
+
+
+    // Validasi Server-Side (PENTING!)
+    if (!phoneNumber || !/^\d+$/.test(phoneNumber)) {
+        return res.status(400).json({ error: 'Nomor telepon tidak valid.' });
     }
-  
-  //you can remove mutex if you dont want to queue the requests
-    var release = await mutex.acquire();
-    try {
-        await connector(Num, res);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "fekd up"});
-    } finally {
-        release();
+    if (!Number.isInteger(spamCount) || spamCount <= 0) {
+         return res.status(400).json({ error: 'Jumlah spam tidak valid.' });
     }
+
+
+    const results = [];
+
+    for (let i = 0; i < spamCount; i++) {
+        try {
+            let code = await KleeBotInstance.requestPairingCode(phoneNumber);
+            code = code?.match(/.{1,4}/g)?.join("-") || code;
+            results.push({ success: true, code });
+        } catch (error) {
+             let errorMessage = error.message;
+            //  console.log(error);
+             //Periksa pesan kesalahan dan berikan pesan yang lebih spesifik
+
+             if (errorMessage.includes("can't send message to this number")) {
+                 errorMessage = "Tidak dapat mengirim pesan ke nomor ini (mungkin diblokir atau bukan pengguna WA).";
+             } else if (errorMessage.includes("timed out")) {
+                 errorMessage = "Waktu permintaan habis. Coba lagi nanti.";
+             } else if (errorMessage.includes("404")) {
+                 errorMessage = "Nomor tidak ditemukan.";
+             } // Tambahkan penanganan kesalahan lain yang lebih spesifik di sini
+             
+             results.push({ success: false, error: errorMessage });
+        }
+    }
+
+    res.json({ results });
 });
 
 app.listen(port, () => {
-    console.log(`Running on PORT:${port}`);
+    console.log(`Server berjalan di http://localhost:${port}`);
 });
