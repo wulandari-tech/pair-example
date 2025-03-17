@@ -2,7 +2,6 @@ const mega = require('megajs');
 const crypto = require('crypto');
 const path = require('path');
 const config = require('./config.js');
-
 function generateUA() {
     var browsers = ['Chrome', 'Firefox', 'Safari', 'Edge'];
     var versions = ['91.0', '90.0', '89.0', '88.0'];
