@@ -4,17 +4,10 @@
   "description": "simple pairing code example",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --name pair-example",
-    "stop": "pm2 stop pair-example",
-    "restart": "pm2 restart pair-example",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/IRON-M4N/pair-example.git"
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "IRON-M4N",
+  "author": "w",
   "license": "MIT",
   "dependencies": {
     "@types/node": "^18.0.6",
