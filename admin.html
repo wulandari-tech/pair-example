@@ -1,64 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
     <style>
-       body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f0f0f0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-    .container {
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        max-width: 500px;
-        width: 90%;
-    }
-    h1 { color: #333; }
-    p { color: #666; line-height: 1.6; }
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-    .button:hover { background-color: #0056b3; }
-    label { display: block; margin-bottom: 5px; }
-    input[type="text"], input[type="password"], input[type="number"] {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;  /* Penting untuk padding */
-    }
-       textarea {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        resize: vertical; /* Allow vertical resizing */
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #eee;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 2rem;
+            margin: 1rem auto; /* Add some margin */
+            background-color: #1e1e1e;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #f59e0b;
+            text-align: center;
+        }
+        /* Form Styles */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa; /* Lighter label color */
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background-color: #27272a;
+            color: #eee;
+            border: 1px solid #3f3f46;
+            border-radius: 0.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+         textarea::placeholder {
+            color: #9ca3af;
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #f59e0b;
+            color: #121212;
+            font-weight: 600;
+            text-decoration: none;
+            border: none; /* Remove border */
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #d97706;
+            transform: translateY(-2px);
+        }
+          /* Message Container */
+        .message-container {
+            margin-bottom: 1.5rem; /* Spacing between product sections */
+            border-bottom: 1px solid #3f3f46; /* Separator */
+            padding-bottom: 1.5rem;
+        }
+        .message-container h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #f59e0b; /* Product ID color */
+        }
+        .message {
+            padding: 0.6rem; /* Slightly less padding */
+            margin-bottom: 0.4rem; /* Less margin */
+            border-radius: 0.375rem;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #22c55e; /* Green */
+            color: #121212;
+            text-align: left;
+            border: 1px solid #16a34a;
+        }
+        .admin-message {
+            background-color: #3b82f6; /* Blue */
+            color: #fff;
+            text-align: right;
+            border: 1px solid #2563eb;
+        }
+         /* Reply Form */
+        .reply-form {
+            margin-top: 1rem;
+        }
+        .reply-text {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #27272a;
+            color: #eee;
+            border: 1px solid #3f3f46;
+            border-radius: 0.5rem;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 0.5rem; /* Spacing between textarea and button */
+        }
+         .reply-text::placeholder{
+             color: #9ca3af;
+         }
+        .reply-form .button {
+            display: block; /* Make reply button full-width */
+            width: 100%;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container animate-container">
         <h1>Admin Panel</h1>
         <form id="productForm">
             <label for="title">Judul Produk:</label>
@@ -77,9 +144,27 @@
         </form>
     </div>
 
-     <script>
-    const productForm = document.getElementById('productForm');
+    <div class="container animate-container">
+        <h1>Messages</h1>
+        <div id="messagesContainer">
+            <!-- Messages will be displayed here -->
+        </div>
+    </div>
 
+    <script>
+    const productForm = document.getElementById('productForm');
+    const messagesContainer = document.getElementById('messagesContainer');
+
+     // --- GSAP Animations ---
+        gsap.from(".animate-container", {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power2.out",
+            stagger: 0.3 // Stagger effect for multiple containers
+        });
+
+    // --- Add Product ---
     productForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -88,7 +173,6 @@
         const image = document.getElementById('image').value;
         const description = document.getElementById('description').value;
 
-        // Kirim data ke server
         fetch('/addProduct', {
             method: 'POST',
             headers: {
@@ -96,16 +180,114 @@
             },
             body: JSON.stringify({ title, price, image, description }),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            alert(data.message); // Tampilkan pesan dari server
-            productForm.reset();   // Kosongkan form
+            alert(data.message); // Use a more subtle notification (e.g., a toast) in a real app
+            productForm.reset();
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat menambahkan produk.');
+            alert('Terjadi kesalahan saat menambahkan produk.'); // Error feedback
         });
     });
+
+   // --- Load and Display Messages ---
+function loadMessages() {
+    fetch('/getAllMessages')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(messagesByProduct => {
+            messagesContainer.innerHTML = ''; // Clear previous messages
+
+            for (const productId in messagesByProduct) {
+                if (messagesByProduct.hasOwnProperty(productId)) {
+                    const productMessages = messagesByProduct[productId];
+                    const productSection = document.createElement('div');
+                    productSection.classList.add('message-container', 'animate-message-section');
+                    productSection.innerHTML = `<h3>Product ID: ${productId}</h3>`;
+
+                    const replyForm = document.createElement('form');
+                    replyForm.classList.add('reply-form');
+                    replyForm.innerHTML = `
+                        <textarea class="reply-text" placeholder="Reply..."></textarea>
+                        <button type="submit" class="button">Send Reply</button>
+                    `;
+                    replyForm.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const replyText = this.querySelector('.reply-text').value;
+                        if (replyText.trim() !== "") { // Prevent empty replies
+                            sendReply(productId, replyText);
+                            this.querySelector('.reply-text').value = '';
+                        }
+
+                    });
+
+                    productMessages.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message');
+                        messageDiv.classList.add(message.sender === 'admin' ? 'admin-message' : 'user-message');
+                        messageDiv.textContent = `${message.sender}: ${message.text}`;
+                        productSection.appendChild(messageDiv);
+                    });
+
+                    productSection.appendChild(replyForm);
+                    messagesContainer.appendChild(productSection);
+                }
+            }
+            // --- GSAP animation for message sections (after adding to DOM) ---
+                gsap.from(".animate-message-section", {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    stagger: 0.2, // Stagger the appearance of each section
+                });
+        })
+        .catch(error => {
+            console.error('Error loading messages:', error);
+             messagesContainer.innerHTML = `<p class = "text-red-500">Gagal memuat pesan: ${error.message}</p>`;
+        });
+}
+
+    // --- Send Reply ---
+    function sendReply(productId, replyText) {
+        fetch('/sendMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ text: replyText, sender: 'admin', productId: productId }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data.message);
+             loadMessages(); // Reload messages to show the new reply
+        })
+        .catch(error => {
+            console.error('Error sending reply:', error);
+              alert('Terjadi kesalahan saat mengirim balasan.'); // User feedback
+        });
+    }
+
+    // Load messages on page load and periodically
+    loadMessages();
+    setInterval(loadMessages, 5000); // Refresh every 5 seconds
+
+
     </script>
 </body>
 </html>
