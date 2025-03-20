@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirim Pesan</title>
+    <style>
+     body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { color: #333; text-align: center; }
+    textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; /* Important for padding */ resize: vertical; /* Allow vertical resizing */ }
+    button { background-color: #5cb85c; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #4cae4c; }
+    .message-container { margin-top: 20px; }
+    .message { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    .user-message { background-color: #dff0d8; border: 1px solid #d0e9c6; }
+    .admin-message { background-color: #f2dede; border: 1px solid #ebccd1; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kirim Pesan ke Admin</h1>
+        <textarea id="messageInput" placeholder="Tulis pesan Anda di sini..."></textarea>
+        <button id="sendMessageButton">Kirim</button>
+
+        <div id="messageContainer" class="message-container">
+            <!-- Pesan akan ditampilkan di sini -->
+        </div>
+    </div>
+
+    <script>
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    const messageContainer = document.getElementById('messageContainer');
+    let productId = localStorage.getItem('selectedProductId');
+
+
+    // --- Fungsi untuk menampilkan pesan ---
+    function displayMessages(messages) {
+      messageContainer.innerHTML = '';
+      if (!messages) {
+          console.warn("Messages is undefined or null");
+          return;
+      }
+        messages.forEach(message => {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(message.sender === 'user' ? 'user-message' : 'admin-message');
+            messageDiv.textContent = `${message.sender}: ${message.text}`;
+            messageContainer.appendChild(messageDiv);
+        });
+    }
+
+
+     sendMessageButton.addEventListener('click', function() {
+        const messageText = messageInput.value;
+        const username = localStorage.getItem('username') || 'Anonymous'; // Ambil username, fallback ke 'Anonymous'
+
+        if (messageText.trim() !== '') {
+            // Kirim pesan ke server
+            fetch('/sendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: messageText, sender: username , productId: productId}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Log pesan dari server (opsional)
+                messageInput.value = '';     // Kosongkan input
+                // Tidak perlu reload halaman, cukup tambahkan pesan baru ke tampilan
+                //displayMessages(data.messages);
+              loadMessages()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    });
+
+    // --- Fungsi untuk memuat pesan dari server ---
+    function loadMessages() {
+      fetch(`/getMessages?productId=${productId}`)
+        .then(response => response.json())
+        .then(data => {
+
+          displayMessages(data.messages); // Tampilkan semua pesan
+        })
+        .catch(error => console.error('Error loading messages:', error));
+}
+      // Panggil loadMessages saat halaman dimuat dan secara berkala
+    loadMessages();
+    setInterval(loadMessages, 5000); // Perbarui setiap 5 detik (bisa disesuaikan)
+
+
+    </script>
+</body>
+</html>
