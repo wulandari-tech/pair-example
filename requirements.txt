@@ -1,3 +1,5 @@
 flask
-python-dotenv
+requests
 instaloader
+beautifulsoup4
+python-dotenv  
