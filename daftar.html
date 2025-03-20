@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar</title>
+     <style>
+        body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+    }
+    h1 { color: #333; }
+    p { color: #666; line-height: 1.6; }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+    .button:hover { background-color: #0056b3; }
+    label { display: block; margin-bottom: 5px; }
+    input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;  /* Penting untuk padding */
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Daftar</h1>
+        <form id="daftarForm">
+            <label for="newUsername">Username:</label>
+            <input type="text" id="newUsername" name="newUsername" required><br><br>
+
+            <label for="newPassword">Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required><br><br>
+
+            <button type="submit" class="button">Daftar</button>
+        </form>
+        <p>Sudah punya akun? <a href="/login/">Login di sini</a></p>
+    </div>
+
+    <script>
+    const daftarForm = document.getElementById('daftarForm');
+    daftarForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const newUsername = document.getElementById('newUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+
+        // Simpan username dan password baru di localStorage (TIDAK AMAN!)
+        localStorage.setItem('username', newUsername);
+        localStorage.setItem('password', newPassword);
+
+        // Redirect ke docs.html
+        window.location.href = '/docs/';
+    });
+    </script>
+</body>
+</html>
