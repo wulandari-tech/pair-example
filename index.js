@@ -1,23 +1,29 @@
+// --- Backend (Node.js - server.js) ---
+
 const http = require('http');
 const fs = require('fs');
 const url = require('url');
 
 const dataFile = 'data.json';
 
-// Fungsi untuk membaca data dari file JSON
+// Utility function to read data
 function readData() {
     try {
         const data = fs.readFileSync(dataFile, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        // Jika file tidak ada atau error, kembalikan object awal
-        return { products: [], messages: {} };
+        console.error("Error reading data file:", error); // Log the error
+        return { products: [], messages: {} }; // Return default data
     }
 }
 
-// Fungsi untuk menulis data ke file JSON
+// Utility function to write data
 function writeData(data) {
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2), 'utf8');
+    try {
+        fs.writeFileSync(dataFile, JSON.stringify(data, null, 2), 'utf8');
+    } catch (error) {
+        console.error("Error writing to data file:", error); // Log the error
+    }
 }
 
 const server = http.createServer((req, res) => {
@@ -25,38 +31,48 @@ const server = http.createServer((req, res) => {
     const pathname = parsedUrl.pathname;
     const query = parsedUrl.query;
 
+    // --- Helper function to serve files ---
+    function serveFile(filename, res, contentType = 'text/html') {
+        fs.readFile(filename, (err, data) => {
+            if (err) {
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Internal Server Error');
+                return;
+            }
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(data);
+        });
+    }
+
     // --- Routing ---
     if (pathname === '/') {
         serveFile('index.html', res);
     } else if (pathname === '/login/') {
-        serveFile('login.html', res);
+        serveFile('login.html', res);  // You'll need to create login.html
     } else if (pathname === '/daftar/') {
-        serveFile('daftar.html', res);
+        serveFile('daftar.html', res); // You'll need to create daftar.html
     } else if (pathname === '/docs/') {
         serveFile('docs.html', res);
-  } else if (pathname === '/message/') {
+    } else if (pathname === '/message/') {
         serveFile('message.html', res);
-
     } else if (pathname === '/admin/' && req.method === 'GET') {
-      const authHeader = req.headers.authorization;
+        const authHeader = req.headers.authorization;
 
-        // Cek Auth Basic (sangat sederhana, JANGAN untuk produksi!)
+        // Basic Auth (VERY SIMPLE - DO NOT USE IN PRODUCTION)
         if (authHeader) {
-          const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
-          const user = auth[0];
-          const pass = auth[1];
+            const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
+            const user = auth[0];
+            const pass = auth[1];
 
-          if (user === 'wanzofc' && pass === 'wanz321') {
-            serveFile('admin.html', res);
-            return;
-          }
-      }
+            if (user === 'wanzofc' && pass === 'wanz321') {
+                serveFile('admin.html', res);
+                return;
+            }
+        }
 
-       // Jika tidak terautentikasi
-      res.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Admin Area"' });
-      res.end('Unauthorized');
-
-
+        // Unauthorized
+        res.writeHead(401, { 'WWW-Authenticate': 'Basic realm="Admin Area"' });
+        res.end('Unauthorized');
 
     } else if (pathname === '/addProduct' && req.method === 'POST') {
         let body = '';
@@ -64,16 +80,22 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
         });
         req.on('end', () => {
-            const newProduct = JSON.parse(body);
-            const data = readData();
-            newProduct.id = Date.now().toString(); // ID sederhana
-            data.products.push(newProduct);
-            writeData(data);
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Produk berhasil ditambahkan!' }));
+            try {
+                const newProduct = JSON.parse(body);
+                const data = readData();
+                newProduct.id = Date.now().toString(); // Simple ID
+                data.products.push(newProduct);
+                writeData(data);
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'Produk berhasil ditambahkan!' }));
+            } catch (error) {
+                console.error("Error parsing JSON in /addProduct:", error); // Log parsing errors
+                res.writeHead(400, { 'Content-Type': 'application/json' }); // 400 Bad Request
+                res.end(JSON.stringify({ message: 'Invalid JSON data' }));
+            }
         });
 
-     } else if (pathname === '/getProducts' && req.method === 'GET') {
+    } else if (pathname === '/getProducts' && req.method === 'GET') {
         const data = readData();
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(data.products));
@@ -84,50 +106,63 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
         });
         req.on('end', () => {
-            const newMessage = JSON.parse(body);
-            const data = readData();
+            try {
+                const newMessage = JSON.parse(body);
+                const data = readData();
 
-            // Pastikan productId ada dan buat array pesan jika belum ada
-            if (!data.messages[newMessage.productId]) {
-                data.messages[newMessage.productId] = [];
+                if (!data.messages[newMessage.productId]) {
+                    data.messages[newMessage.productId] = [];
+                }
+                data.messages[newMessage.productId].push(newMessage);
+                writeData(data);
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'Pesan terkirim!' }));
+            } catch (error) {
+                console.error("Error parsing JSON in /sendMessage:", error);
+                 res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ message: 'Invalid JSON data' }));
             }
-              data.messages[newMessage.productId].push(newMessage);
-              writeData(data);
-
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ message: 'Pesan terkirim!' }));
         });
 
     } else if (pathname === '/getMessages' && req.method === 'GET') {
-        const productId = query.productId; // Ambil productId dari query parameter
+        const productId = query.productId;
         const data = readData();
-          // Pastikan data.messages dan data.messages[productId] ada sebelum filter
         const productMessages = (data.messages && data.messages[productId]) || [];
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ messages: productMessages }));
 
-    } else {
+    } else if (pathname === '/getAllMessages' && req.method === 'GET') {
+        const data = readData();
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(data.messages));
+
+    }  else if (pathname.startsWith('/')) {
+          // Handle dynamic short URLs (e.g., /shortcode/productId)
+          const parts = pathname.split('/');
+          if(parts.length === 3) {
+            const shortCode = parts[1]
+            const productId = parts[2]
+            //redirect costumer to message
+            // Set the selectedProductId in a cookie (more reliable than localStorage for cross-page access)
+             res.writeHead(302, {  // 302 Found (Temporary Redirect)
+                'Location': '/message/',
+                'Set-Cookie': `selectedProductId=${productId}; Path=/; HttpOnly` // Set cookie, HttpOnly for security
+                });
+            res.end();
+            return;
+          }
+      }
+    else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
     }
 });
-// Fungsi bantu untuk menyajikan file
-function serveFile(filename, res) {
-    fs.readFile(filename, (err, data) => {
-        if (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Internal Server Error');
-            return;
-        }
-        res.writeHead(200, { 'Content-Type': 'text/html' }); // Asumsi semua file adalah HTML
-        res.end(data);
-    });
-}
 
 const PORT = 3000;
 server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
-    // Buat data.json jika belum ada
+    // Create data.json if it doesn't exist
     if (!fs.existsSync(dataFile)) {
         writeData({ products: [], messages: {} });
         console.log('data.json created.');
