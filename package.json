@@ -2,9 +2,9 @@
   "name": "pair",
   "version": "1.0.0",
   "description": "simple pairing code example",
-  "main": "index.js",
+  "main": "wanzofc.py",
   "scripts": {
-    "start": "node index.js"
+    "start": "python wanzofc.py"
   },
   "keywords": [],
   "author": "w",
