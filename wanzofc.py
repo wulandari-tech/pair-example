@@ -4,22 +4,24 @@ import time
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+
+# --- Instaloader Setup ---
 L = instaloader.Instaloader()
+L.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36' # User-Agent browser
+
 
 # --- Konfigurasi ---
-CACHE_TTL = timedelta(minutes=15)  # Waktu kadaluarsa cache (15 menit)
-RETRY_DELAY = 60  # Waktu tunggu sebelum mencoba lagi setelah 401 (detik)
-MAX_RETRIES = 3  # Jumlah maksimum percobaan ulang setelah 401
+CACHE_TTL = timedelta(minutes=15)
+RETRY_DELAY = 60  # Naikkan jika perlu
+MAX_RETRIES = 3
 
 
-# In-memory cache (gunakan Redis atau database lain untuk solusi yang lebih scalable)
+# In-memory cache
 profile_cache = {}
-
 
 @app.route('/')
 def index():
     return "Instagram Stalker Server is running!"
-
 
 @app.route('/stalk/<username>')
 def stalk_profile(username):
@@ -32,7 +34,7 @@ def stalk_profile(username):
         else:
             print(f"Cache expired for {username}. Fetching new data.")
 
-    # --- Rate Limiting & Retry Logic ---
+    # --- Rate Limiting & Retry ---
     retries = 0
     while retries < MAX_RETRIES:
         try:
@@ -48,7 +50,6 @@ def stalk_profile(username):
                 "is_private": profile.is_private,
                 "posts": []
             }
-
             for post in profile.get_posts():
                 post_data = {
                     "id": post.shortcode,
@@ -59,21 +60,18 @@ def stalk_profile(username):
                     "url": post.url,
                 }
                 data["posts"].append(post_data)
-            # Simpan ke cache
             profile_cache[username] = (data, datetime.utcnow())
             return jsonify(data)
 
         except instaloader.exceptions.ProfileNotExistsException:
             return jsonify({"error": "Profile not found"}), 404
-
-        except instaloader.exceptions.TooManyRequestsException as e:  #Tangani 401/429
+        except instaloader.exceptions.TooManyRequestsException as e:
             print(f"Rate limited for {username}.  Retrying in {RETRY_DELAY} seconds... ({retries + 1}/{MAX_RETRIES})")
             retries += 1
             time.sleep(RETRY_DELAY)
         except Exception as e:
             return jsonify({"error": "An error occurred", "message": str(e)}), 500
 
-    # Jika mencapai batas percobaan ulang
     return jsonify({"error": "Too many requests", "message": "Failed to fetch data after multiple retries."}), 429
 
 
