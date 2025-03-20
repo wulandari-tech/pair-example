@@ -1,162 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produk</title>
-     <style>
+    <title>Wanzofc Docs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
         body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #eee;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px; /* Larger container */
+            width: 90%;
+            padding: 2rem 1rem; /* Responsive padding */
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f59e0b;
+            text-align: center; /* Center the title */
+        }
 
-    }
-    .container {
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        max-width: 800px;
-        width: 90%;
-         margin: 0 auto;
-    }
-    h1 { color: #333; }
-    p { color: #666; line-height: 1.6; }
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-    .button:hover { background-color: #0056b3; }
-    label { display: block; margin-bottom: 5px; }
-    input[type="text"], input[type="password"] {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;  /* Penting untuk padding */
-    }
-     .product-grid {
+        /* Product Grid */
+       .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-        gap: 20px;
-        margin-top: 20px;
-    }
-    .product {
-        border: 1px solid #ddd;
-        padding: 15px;
-        text-align: center;
-        border-radius: 8px;
-    }
-    .product img {
-        max-width: 100%;
-        height: auto;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 10px;
-    }
-    .buyButton, .shareButton {
-        background-color: #4CAF50;
-        color: white;
-        padding: 8px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-        transition: background-color 0.3s;
-    }
-    .shareButton {
-      background-color: #007bff;
-    }
-    .buyButton:hover, .shareButton:hover {
-        background-color: #3e8e41;
-    }
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid, slightly larger items */
+        gap: 1.5rem; /* More gap */
+        margin-top: 2rem;
+        }
+        .product {
+            background-color: #1e1e1e;
+            border-radius: 0.75rem;
+            overflow: hidden; /* Hide overflowing content */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+            transition: transform 0.3s ease;
+            position: relative; /* For parallax */
+        }
+
+        .product:hover {
+            transform: translateY(-5px); /* Lift on hover */
+        }
+
+       .product img {
+            width: 100%;
+            height: 200px; /* Fixed height for consistent layout */
+            object-fit: cover; /* Ensure images cover the area */
+            display: block; /* Remove extra space below image */
+            border-bottom: 3px solid #f59e0b; /* Accent border */
+        }
+        .product-info {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .product h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #eee;
+        }
+        .product p {
+            font-size: 1rem;
+            color: #aaa;
+            margin-bottom: 0.75rem;
+        }
+
+        .buyButton, .shareButton {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 500;
+        }
+
+        .buyButton {
+            background-color: #22c55e; /* Green */
+            color: #121212;
+        }
+        .buyButton:hover {
+            background-color: #16a34a; /* Darker green */
+        }
+        .shareButton {
+            background-color: #3b82f6; /* Blue */
+            color: #fff;
+        }
+        .shareButton:hover {
+            background-color: #2563eb; /* Darker blue */
+        }
+
+        #logoutButton {
+            position: fixed; /* Fixed positioning */
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            background-color: #ef4444; /* Red */
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+
+        }
+
+        #logoutButton:hover {
+            background-color: #dc2626; /* Darker red */
+        }
+         #logoutButton i {
+            margin-right: 0.5rem;
+        }
+          .parallax-img {
+            transition: transform 0.8s ease-out; /* Smooth transition */
+        }
+
     </style>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+
 </head>
 <body>
     <div class="container">
-        <h1>Daftar Produk</h1>
-        <button id="logoutButton" class="button">Logout</button>
+        <h1 class="animate-title">Daftar Produk</h1>
+        <button id="logoutButton" class="animate-button"><i class="fas fa-sign-out-alt"></i>Logout</button>
 
         <div id="productContainer" class="product-grid">
-            <!-- Produk akan ditampilkan di sini -->
+            <!-- Products will be loaded here -->
         </div>
     </div>
-
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     const productContainer = document.getElementById('productContainer');
     const logoutButton = document.getElementById('logoutButton');
 
-      logoutButton.addEventListener('click', function() {
+    // --- GSAP Animations ---
+    gsap.from(".animate-title", { opacity: 0, y: -50, duration: 1, ease: "power2.out", delay: 0.2 });
+    gsap.from("#logoutButton", { opacity: 0, x: 50, duration: 1, ease: "power2.out", delay: 0.4 });
+
+     // --- Logout ---
+    logoutButton.addEventListener('click', function() {
         localStorage.removeItem('username');
         localStorage.removeItem('password');
-        window.location.href = '/login/'; // Redirect ke halaman login
+        // Consider also clearing any session cookies here if you implement sessions
+        window.location.href = '/login/';
     });
 
-    // Fungsi untuk menampilkan produk
+    // --- Display Products ---
     function displayProducts(products) {
-        productContainer.innerHTML = ''; // Bersihkan kontainer
+        productContainer.innerHTML = ''; // Clear previous products
 
         products.forEach(product => {
             const productDiv = document.createElement('div');
-            productDiv.classList.add('product');
+            productDiv.classList.add('product', 'animate-product');
             productDiv.innerHTML = `
-                <h2>${product.title}</h2>
-                <img src="${product.image}" alt="${product.title}" width="200">
-                <p>Harga: Rp ${product.price}</p>
-                <button class="buyButton" data-product-id="${product.id}">Buy</button>
-                <button class="shareButton" data-product-id="${product.id}">Share</button>
-
+                <img src="${product.image}" alt="${product.title}" class="parallax-img">
+                <div class="product-info">
+                    <h2>${product.title}</h2>
+                    <p>Harga: Rp ${product.price}</p>
+                    <button class="buyButton" data-product-id="${product.id}">Buy</button>
+                    <button class="shareButton" data-product-id="${product.id}">Share</button>
+                </div>
             `;
             productContainer.appendChild(productDiv);
+
+            // --- Parallax Setup (inside displayProducts) ---
+            gsap.to(productDiv.querySelector('.parallax-img'), {
+                yPercent: -10, // Adjust for desired parallax amount
+                ease: "none",
+                scrollTrigger: {
+                    trigger: productDiv,
+                    start: "top bottom", // Start when top of product hits bottom of viewport
+                    end: "bottom top",   // End when bottom of product hits top of viewport
+                    scrub: true       // Smoothly animate based on scroll position
+                }
+            });
         });
 
-        // Event listener untuk tombol Buy
-        const buyButtons = document.querySelectorAll('.buyButton');
-        buyButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = this.dataset.productId;
-                 localStorage.setItem('selectedProductId', productId); // Simpan ID produk
+          // --- Event delegation for Buy and Share buttons ---
+        productContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('buyButton')) {
+                const productId = event.target.dataset.productId;
+                localStorage.setItem('selectedProductId', productId);
                 window.location.href = '/message/';
-            });
+            } else if (event.target.classList.contains('shareButton')) {
+                const productId = event.target.dataset.productId;
+                const shareUrl = `${window.location.origin}/${generateShortCode(productId)}/${productId}`;
+                  handleShare(shareUrl)
+            }
         });
-           // Event listener untuk tombol Share
-        const shareButtons = document.querySelectorAll('.shareButton');
-        shareButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = this.dataset.productId;
-                const shareUrl = `${window.location.origin}/${generateShortCode(productId)}/${productId}`; // Buat URL share
-                alert("Share this URL: " + shareUrl);
-            });
+
+
+        // --- GSAP animation for products (after adding to DOM) ---
+        gsap.from(".animate-product", {
+            opacity: 0,
+            y: 50,
+            duration: 0.6,
+            ease: "power2.out",
+            stagger: 0.15, // Stagger the appearance of each product
+            scrollTrigger: {  // Trigger when product container comes into view
+                trigger: "#productContainer",
+                start: "top 80%", // Start when 80% of the container is visible
+            }
         });
     }
-    // --- Fungsi untuk menghasilkan kode unik ---
+
+       async function handleShare(shareUrl) {
+            const { value: copySuccess } = await Swal.fire({
+                title: 'Share Product',
+                input: 'text',
+                inputValue: shareUrl,
+                showCancelButton: true,
+                confirmButtonText: 'Copy URL',
+                cancelButtonText: 'Cancel',
+                inputAttributes: {
+                    readonly: true
+                }
+            });
+
+            if (copySuccess) {
+                try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    Swal.fire('Copied!', 'The URL has been copied to your clipboard.', 'success');
+                } catch (err) {
+                    Swal.fire('Error', 'Failed to copy URL: ' + err, 'error');
+                }
+            }
+        }
+
+    // --- Helper: Generate Short Code ---
     function generateShortCode(productId) {
         return Math.random().toString(36).substring(2, 8);
     }
 
-    // --- Mengambil data produk dari server ---
-    fetch('/getProducts')  // Perhatikan endpoint-nya
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(products => {
-        displayProducts(products);
-    })
-    .catch(error => {
-        console.error('Error fetching products:', error);
-        productContainer.innerHTML = '<p>Gagal memuat produk.</p>';
-    });
+    // --- Fetch Products ---
+    fetch('/getProducts')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(products => {
+            displayProducts(products);
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            productContainer.innerHTML = `<p class="text-red-500">Gagal memuat produk: ${error.message}</p>`;
+        });
+
+       // --- Register ScrollTrigger (after GSAP is loaded) ---
+       gsap.registerPlugin(ScrollTrigger);
 
     </script>
 </body>
