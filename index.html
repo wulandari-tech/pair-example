@@ -1,64 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toko Super Canggih</title>
+    <title>wanzofc shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
-    /* CSS langsung di sini */
-    body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f0f0f0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
-    .container {
-        background-color: white;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        max-width: 500px;
-        width: 90%;
-    }
-    h1 { color: #333; }
-    p { color: #666; line-height: 1.6; }
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 10px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-    }
-    .button:hover { background-color: #0056b3; }
-    label { display: block; margin-bottom: 5px; }
-    input[type="text"], input[type="password"] {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;  /* Penting untuk padding */
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #eee; /* Light text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            width: 90%;
+            padding: 2rem;
+            background-color: #1e1e1e; /* Slightly lighter dark */
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f59e0b; /* Accent color (orange) */
+        }
+       p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            color: #ccc;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #f59e0b; /* Orange button */
+            color: #121212;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #d97706; /* Darker orange on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Selamat Datang di Toko Super Canggih!</h1>
-        <p>Temukan produk-produk luar biasa dengan harga terbaik. Kami menawarkan pengalaman belanja yang modern, cepat, dan aman.</p>
-        <p>Jelajahi koleksi kami yang beragam, mulai dari elektronik terbaru, fashion terkini, hingga kebutuhan rumah tangga yang unik.  Semua produk kami dipilih dengan cermat untuk memastikan kualitas dan kepuasan pelanggan.</p>
+        <h1 class="animate-title">selamat Datang di wanzofc shop!</h1>
+        <p class="animate-text">temukan produk-produk luar biasa dengan harga terbaik. Kami menawarkan pengalaman belanja yang modern, cepat, dan aman.</p>
+        <p class="animate-text">jelajahi koleksi kami yang beragam, mulai dari elektronik terbaru, fashion terkini, hingga kebutuhan rumah tangga yang unik. Semua produk kami dipilih dengan cermat.</p>
 
         <div class="buttons">
-            <a href="/login/" class="button">Login</a>
-            <a href="/daftar/" class="button">Daftar</a>
+            <a href="/login/" class="button animate-button">Login</a>
+            <a href="/daftar/" class="button animate-button">Daftar</a>
         </div>
     </div>
+    <script>
+        gsap.from(".animate-title", { opacity: 0, y: -50, duration: 1, ease: "power2.out" });
+        gsap.from(".animate-text", { opacity: 0, y: 30, duration: 1, ease: "power2.out", stagger: 0.2 }); // Stagger effect
+        gsap.from(".animate-button", { opacity: 0, scale: 0.8, duration: 0.8, ease: "back.out(1.7)", stagger: 0.3 });
+
+    </script>
 </body>
 </html>
