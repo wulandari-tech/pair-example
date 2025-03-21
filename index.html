@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wanzofc down</title>
+    <title>Wanzofc Down</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Reset (Minimal, expand as needed) */
+        /* (CSS remains the same as the previous, well-styled version) */
         * {
             margin: 0;
             padding: 0;
@@ -169,7 +169,7 @@
     <div class="container">
         <h1>WANZOFC DOWN</h1>
         <form id="download-form">
-            <label for="url">Instagram URL:</label>
+            <label for="url">instagram URL:</label>
             <input type="text" id="url" name="url" required>
             <button type="submit" id="download-button"><i class="fas fa-download"></i></button>
         </form>
@@ -180,24 +180,19 @@
 
         <div id="results"></div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
         const form = document.getElementById('download-form');
         const progressBar = document.getElementById('progress-bar');
         const resultsDiv = document.getElementById('results');
         const downloadButton = document.getElementById('download-button');
-
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = document.getElementById('url').value;
-
-            // Reset and initial animation
-            gsap.set(progressBar, { width: '0%', opacity: 1 }); // Reset GSAP
+            gsap.set(progressBar, { width: '0%', opacity: 1 });
             resultsDiv.innerHTML = '';
-            downloadButton.disabled = true; // Disable the button during the process
-            downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Loading spinner
-
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
             try {
                 const response = await fetch('/download', {
@@ -214,21 +209,12 @@
                 }
 
                 const data = await response.json();
-
-
-               // Animate the progress bar with GSAP (simulated progress)
-                gsap.to(progressBar, {
-                    width: '100%',     // Animate to 100%
-                    duration: 1.5,    // Animation duration (adjust as needed)
-                    ease: "power2.out", // Easing function
-                    onUpdate: () => {
-                        //Correct NaN
-                        const progress = progressBar._gsap.progress * 100;
-                         progressBar.textContent = isNaN(progress) ? '0%' : `${Math.floor(progress)}%`;
-
-                    },
-                    onComplete: () => {
-                        // Animation complete: Display the results
+                let currentProgress = 0;
+                const progressInterval = setInterval(() => {
+                    currentProgress += 10; // Increase by 10% each step
+                    if (currentProgress > 100) {
+                        currentProgress = 100;
+                        clearInterval(progressInterval); 
                         if (data.avatar) {
                             const avatarImage = document.createElement('img');
                             avatarImage.src = data.avatar;
@@ -247,23 +233,32 @@
                             const link = document.createElement('a');
                             link.href = url;
                             link.innerHTML = `<i class="fas fa-download"></i> Download`;
-                            link.target = '_blank'; // Open in a new tab
+                            link.target = '_blank';
                             resultsDiv.appendChild(link);
                         });
 
-                        downloadButton.disabled = false; // Re-enable the button
-                        downloadButton.innerHTML = '<i class="fas fa-download"></i>'; // Restore the download icon
+                        downloadButton.disabled = false;
+                        downloadButton.innerHTML = '<i class="fas fa-download"></i>';
                     }
-                });
 
+                    // Update progress bar with GSAP
+                    gsap.to(progressBar, {
+                        width: `${currentProgress}%`,
+                        duration: 0.1,  // Short duration for smooth updates
+                        ease: "power1.out",
+                        onUpdate: () => {
+                            progressBar.textContent = `${Math.floor(currentProgress)}%`;
+                        }
+                    });
+                }, 200); // Update every 200ms (adjust for speed)
 
 
             } catch (error) {
                 console.error('Error:', error);
                 resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-                gsap.to(progressBar, { width: '0%', duration: 0.5, opacity: 0 }); // Hide progress bar
-                downloadButton.disabled = false; // Re-enable button
-                downloadButton.innerHTML = '<i class="fas fa-download"></i>'; // Restore icon
+                gsap.to(progressBar, { width: '0%', duration: 0.5, opacity: 0 });
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>';
             }
         });
     </script>
