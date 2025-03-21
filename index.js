@@ -1,10 +1,16 @@
+// server.js
 const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = 3000;
+
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // Penting untuk menerima data JSON dari client
+app.use(express.static(path.join(__dirname)));
+
 const snapinst = {
     async app(url) {
         try {
@@ -15,16 +21,16 @@ const snapinst = {
             form.append('url', url);
             form.append('action', 'post');
             form.append('lang', '');
-            form.append('cf-turnstile-response', ''); //Hapus jika error
+            form.append('cf-turnstile-response', ''); // Hapus kalau error
             form.append('token', $('input[name=token]').attr('value'));
 
             const headers = {
                 ...form.getHeaders(),
                 'accept': '*/*',
                 'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-                'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',  //Update jika perlu
+                'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
                 'sec-ch-ua-mobile': '?1',
-                'sec-ch-ua-platform': '"Android"',   // Update jika perlu
+                'sec-ch-ua-platform': '"Android"',
                 'sec-fetch-dest': 'empty',
                 'sec-fetch-mode': 'cors',
                 'sec-fetch-site': 'same-origin',
@@ -49,7 +55,9 @@ const snapinst = {
                 urls: []
             };
             _('.row .download-item').each((i, e) => {
-                res.urls.push(_(e).find('.download-bottom a').attr('href'));
+                const url = _(e).find('.download-bottom a').attr('href');
+                const type = url.includes('.mp4') ? 'video' : 'image'; // Cek tipe konten
+                res.urls.push({ url, type });
             });
 
             return res;
@@ -60,17 +68,10 @@ const snapinst = {
     },
 };
 
-// Route utama ("/") - Menampilkan form
+
+// Route utama ("/")
 app.get('/', (req, res) => {
-    const htmlForm = `
-    <h1>Download Instagram</h1>
-    <form action="/download" method="post">
-        <label for="url">Masukkan URL Instagram:</label><br>
-        <input type="text" id="url" name="url" style="width: 300px;" required><br><br>
-        <button type="submit">Download</button>
-    </form>
-    `;
-    res.send(htmlForm);
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Route untuk menangani permintaan download
@@ -78,31 +79,18 @@ app.post('/download', async (req, res) => {
     try {
         const instagramUrl = req.body.url;
         if (!instagramUrl) {
-          return res.status(400).send("URL Instagram tidak boleh kosong.");
+            return res.status(400).json({ error: "URL Instagram tidak boleh kosong." }); // Kirim error sebagai JSON
         }
 
         const result = await snapinst.app(instagramUrl);
-
-        let htmlResult = `<h1>Hasil Download</h1>`;
-         if (result.avatar) {
-              htmlResult += `<img src="${result.avatar}" alt="Avatar" style="max-width: 100px;"><br>`;
-         }
-        htmlResult += `<p>Username: ${result.username}</p>`;
-        htmlResult += `<h2>Link Download:</h2><ul>`;
-        result.urls.forEach(url => {
-            htmlResult += `<li><a href="${url}" target="_blank">Download</a></li>`;
-        });
-        htmlResult += `</ul>`;
-        htmlResult += `<a href="/">Kembali</a>`; // Tombol kembali
-
-        res.send(htmlResult);
+        res.json(result); // Kirim hasil sebagai JSON ke client
 
     } catch (error) {
-        res.status(500).send("Terjadi kesalahan: " + error.message + "<br><a href='/'>Kembali</a>");
+        res.status(500).json({ error: "Terjadi kesalahan: " + error.message }); // Kirim error sebagai JSON
     }
 });
 
 
 app.listen(port, () => {
-    console.log(`Server berjalan.  Download Instagram di http://localhost:${port}`);
+    console.log(`Server berjalan di http://localhost:${port}`);
 });
