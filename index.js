@@ -1,3 +1,4 @@
+// server.js
 const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
@@ -10,7 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-const snapinst = {  // Instagram Downloader (remains the same)
+// --- Instagram Downloader (snapinst) ---
+const snapinst = {
     async app(url) {
         try {
             const { data } = await axios.get('https://snapinst.app/');
@@ -20,16 +22,16 @@ const snapinst = {  // Instagram Downloader (remains the same)
             form.append('url', url);
             form.append('action', 'post');
             form.append('lang', '');
-            form.append('cf-turnstile-response', ''); // Remove if causing errors
+            form.append('cf-turnstile-response', ''); // Remove if errors
             form.append('token', $('input[name=token]').attr('value'));
 
             const headers = {
                 ...form.getHeaders(),
                 'accept': '*/*',
                 'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-                'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', //Update if needed
+                 'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', // Update if needed
                 'sec-ch-ua-mobile': '?1',
-                'sec-ch-ua-platform': '"Android"',  // Update if needed
+                'sec-ch-ua-platform': '"Android"', // Update if needed
                 'sec-fetch-dest': 'empty',
                 'sec-fetch-mode': 'cors',
                 'sec-fetch-site': 'same-origin',
@@ -55,18 +57,19 @@ const snapinst = {  // Instagram Downloader (remains the same)
             };
             _('.row .download-item').each((i, e) => {
                 const url = _(e).find('.download-bottom a').attr('href');
-                res.urls.push(url); // Only store the URL
+                res.urls.push(url);
             });
 
             return res;
         } catch (error) {
             console.error("Error in snapinst.app:", error);
-            throw error; // Re-throw for handling in the route
+            throw error;
         }
     },
 };
 
-const SpotifyDown = { // Spotify Downloader
+// --- Spotify Downloader (SpotifyDown) ---
+const SpotifyDown = {
     async metadata(url) {
         try {
             const metadataResponse = await fetch(`https://spotify-down.com/api/metadata?link=${encodeURIComponent(url)}`, {
@@ -79,9 +82,9 @@ const SpotifyDown = { // Spotify Downloader
                     'content-type': 'application/json',
                     'origin': 'https://spotify-down.com',
                     'referer': 'https://spotify-down.com/',
-                    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+                     'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', // Update if needed
                     'sec-ch-ua-mobile': '?1',
-                    'sec-ch-ua-platform': '"Android"',
+                    'sec-ch-ua-platform': '"Android"',  // Update if needed
                     'sec-fetch-dest': 'empty',
                     'sec-fetch-mode': 'cors',
                     'sec-fetch-site': 'same-origin',
@@ -93,16 +96,15 @@ const SpotifyDown = { // Spotify Downloader
                 throw new Error('Failed to fetch metadata');
             }
 
-            const metadata =  (await metadataResponse.json()).data;
-              if (!metadata) {
+            const metadata = (await metadataResponse.json()).data;
+            if (!metadata) {
                 throw new Error("Invalid metadata received from server.");
-              }
-              return metadata;
-
+            }
+            return metadata;
 
         } catch (error) {
             console.error('Error:', error.message);
-            throw error; // Important for handling in route
+            throw error;
         }
     },
     async download(url, title, artist) {
@@ -113,9 +115,9 @@ const SpotifyDown = { // Spotify Downloader
                     'accept': '*/*',
                     'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
                     'referer': 'https://spotify-down.com/',
-                    'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"',
+                     'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', // Update if needed
                     'sec-ch-ua-mobile': '?1',
-                    'sec-ch-ua-platform': '"Android"',
+                    'sec-ch-ua-platform': '"Android"',  // Update if needed
                     'sec-fetch-dest': 'empty',
                     'sec-fetch-mode': 'cors',
                     'sec-fetch-site': 'same-origin',
@@ -128,42 +130,66 @@ const SpotifyDown = { // Spotify Downloader
             }
 
             const downloadData = await downloadResponse.json();
-              if (!downloadData || !downloadData.data || !downloadData.data.link) {
+            if (!downloadData || !downloadData.data || !downloadData.data.link) {
                 throw new Error("Invalid download data received from server.");
-              }
+            }
 
             return {
                 url: downloadData.data.link
             };
         } catch (error) {
             console.error('Error:', error.message);
-            throw error; // Important for handling in route
+            throw error;
         }
     }
 };
 
+// --- TikTok/Douyin Downloader (SnapDouyin) ---
+function calculateHash(url, salt) {
+    return btoa(url) + (url.length + 1_000) + btoa(salt);
+}
 
+async function SnapDouyin(url) {
+    try {
+        const re1 = await axios.get('https://snapdouyin.app/id');
+        const token = re1.data.split('<input id="token" type="hidden" name="token" value="')[1].split('"')[0];
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        };
+
+        const body = new URLSearchParams();
+        body.append('url', url);
+        body.append('token', token);
+        body.append('hash', calculateHash(url, 'aio-dl'));
+
+        const res = await axios.post(`https://snapdouyin.app/wp-json/mx-downloader/video-data/`, body.toString(), { headers });
+        return res.data;  // Directly return the data
+    } catch(error){
+        console.error("Error in SnapDouyin:", error);
+        throw error; // Re-throw for handling in the route.
+    }
+}
+
+// --- Routes ---
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Instagram Download Route
+// Instagram
 app.post('/download', async (req, res) => {
     try {
         const instagramUrl = req.body.url;
         if (!instagramUrl) {
             return res.status(400).json({ error: "Instagram URL cannot be empty." });
         }
-
         const result = await snapinst.app(instagramUrl);
         res.json(result);
-
     } catch (error) {
         res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
 
-// Spotify Download Route
+// Spotify
 app.post('/spotify-download', async (req, res) => {
     try {
         const spotifyUrl = req.body.url;
@@ -173,37 +199,49 @@ app.post('/spotify-download', async (req, res) => {
 
         const metadata = await SpotifyDown.metadata(spotifyUrl);
         if (!metadata) {
-            return res.status(500).json({ error: "Could not retrieve Spotify metadata." });
+          return res.status(500).json({ error: "Could not retrieve Spotify metadata." });
         }
-        // Handle both tracks and albums/playlists
+
         if (metadata.type === 'track') {
             const downloadLink = await SpotifyDown.download(metadata.link, metadata.title, metadata.artists);
+            if (!downloadLink) {
+               return res.status(500).json({ error: "Could not retrieve Spotify download link." });
+            }
+            res.json({ ...metadata, downloadLink });
+        } else if (metadata.type === 'album' || metadata.type === 'playlist') {
+            if (!metadata.tracks || metadata.tracks.length === 0) {
+               return res.status(400).json({error: "No track in album/playlist"})
+            }
+            const track = metadata.tracks[0]; //Simplifikasi
+            const downloadLink = await SpotifyDown.download(track.link, track.title, track.artists);
              if (!downloadLink) {
                 return res.status(500).json({ error: "Could not retrieve Spotify download link." });
              }
-             res.json({ ...metadata, downloadLink }); // Combine metadata and download link
-        } else if (metadata.type === 'album' || metadata.type === 'playlist') {
-            //For simplicity, only get first
-            if(!metadata.tracks || metadata.tracks.length === 0){
-               return res.status(400).json({error: "No track in album/playlist"})
-            }
-            const track = metadata.tracks[0];
-            const downloadLink = await SpotifyDown.download(track.link, track.title, track.artists);
-             if (!downloadLink) {
-               return res.status(500).json({ error: "Could not retrieve Spotify download link." });
-             }
-            res.json({ ...track, downloadLink }); // Send the first track's info
+            res.json({ ...track, downloadLink });
 
         } else {
-             res.status(400).json({ error: "Unsupported Spotify URL type." });
+            res.status(400).json({ error: "Unsupported Spotify URL type." });
         }
-
 
     } catch (error) {
         res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
 
+// TikTok/Douyin
+app.post('/tiktok-download', async (req, res) => {
+    try{
+        const tiktokUrl = req.body.url;
+        if(!tiktokUrl){
+            return res.status(400).json({error: "TikTok URL cannot be empty."});
+        }
+        const result = await SnapDouyin(tiktokUrl);
+        res.json(result); // Send result directly
+
+    } catch(error){
+      res.status(500).json({ error: "An error occurred: " + error.message });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
