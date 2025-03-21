@@ -6,12 +6,9 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const port = 3000;
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
-
-// --- Instagram Downloader (snapinst) ---
 const snapinst = {
     async app(url) {
         try {
@@ -67,8 +64,6 @@ const snapinst = {
         }
     },
 };
-
-// --- Spotify Downloader (SpotifyDown) ---
 const SpotifyDown = {
     async metadata(url) {
         try {
@@ -143,8 +138,6 @@ const SpotifyDown = {
         }
     }
 };
-
-// --- TikTok/Douyin Downloader (SnapDouyin) ---
 function calculateHash(url, salt) {
     return btoa(url) + (url.length + 1_000) + btoa(salt);
 }
@@ -163,19 +156,15 @@ async function SnapDouyin(url) {
         body.append('hash', calculateHash(url, 'aio-dl'));
 
         const res = await axios.post(`https://snapdouyin.app/wp-json/mx-downloader/video-data/`, body.toString(), { headers });
-        return res.data;  // Directly return the data
+        return res.data;  
     } catch(error){
         console.error("Error in SnapDouyin:", error);
-        throw error; // Re-throw for handling in the route.
+        throw error; 
     }
 }
-
-// --- Routes ---
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-// Instagram
 app.post('/download', async (req, res) => {
     try {
         const instagramUrl = req.body.url;
@@ -188,8 +177,6 @@ app.post('/download', async (req, res) => {
         res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
-
-// Spotify
 app.post('/spotify-download', async (req, res) => {
     try {
         const spotifyUrl = req.body.url;
@@ -212,7 +199,7 @@ app.post('/spotify-download', async (req, res) => {
             if (!metadata.tracks || metadata.tracks.length === 0) {
                return res.status(400).json({error: "No track in album/playlist"})
             }
-            const track = metadata.tracks[0]; //Simplifikasi
+            const track = metadata.tracks[0]; 
             const downloadLink = await SpotifyDown.download(track.link, track.title, track.artists);
              if (!downloadLink) {
                 return res.status(500).json({ error: "Could not retrieve Spotify download link." });
@@ -227,8 +214,6 @@ app.post('/spotify-download', async (req, res) => {
         res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
-
-// TikTok/Douyin
 app.post('/tiktok-download', async (req, res) => {
     try{
         const tiktokUrl = req.body.url;
@@ -236,13 +221,12 @@ app.post('/tiktok-download', async (req, res) => {
             return res.status(400).json({error: "TikTok URL cannot be empty."});
         }
         const result = await SnapDouyin(tiktokUrl);
-        res.json(result); // Send result directly
+        res.json(result); 
 
     } catch(error){
       res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
-
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
