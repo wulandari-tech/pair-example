@@ -4,9 +4,7 @@ const FormData = require('form-data');
 const express = require('express');
 const app = express();
 const port = 3000;
-
 app.use(express.urlencoded({ extended: true }));
-
 const snapinst = {
     async app(url) {
         try {
