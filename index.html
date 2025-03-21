@@ -1,81 +1,122 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>wanzofc shop</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <title>wanzofc down</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212; /* Dark background */
-            color: #eee; /* Light text */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            max-width: 800px;
-            width: 90%;
-            padding: 2rem;
-            background-color: #1e1e1e; /* Slightly lighter dark */
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        #progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: #4CAF50;
             text-align: center;
+            line-height: 30px;
+            color: white;
         }
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #f59e0b; /* Accent color (orange) */
+        #preview {
+            margin-top: 20px;
         }
-       p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-            color: #ccc;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-        }
-        .button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background-color: #f59e0b; /* Orange button */
-            color: #121212;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .button:hover {
-            background-color: #d97706; /* Darker orange on hover */
-            transform: translateY(-2px); /* Slight lift on hover */
+        .preview-item {
+          margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="animate-title">selamat Datang di wanzofc shop!</h1>
-        <p class="animate-text">temukan produk-produk luar biasa dengan harga terbaik. Kami menawarkan pengalaman belanja yang modern, cepat, dan aman.</p>
-        <p class="animate-text">jelajahi koleksi kami yang beragam, mulai dari elektronik terbaru, fashion terkini, hingga kebutuhan rumah tangga yang unik. Semua produk kami dipilih dengan cermat.</p>
+    <h1>wanzofc down</h1>
+    <form id="download-form">
+        <label for="url">Masukkan URL Instagram:</label><br>
+        <input type="text" id="url" name="url" style="width: 300px;" required><br><br>
+        <button type="submit">Download</button>
+    </form>
 
-        <div class="buttons">
-            <a href="/login/" class="button animate-button">Login</a>
-            <a href="/daftar/" class="button animate-button">Daftar</a>
-        </div>
-    </div>
+    <div id="progress-bar">0%</div>
+    <div id="preview"></div>
+
     <script>
-        gsap.from(".animate-title", { opacity: 0, y: -50, duration: 1, ease: "power2.out" });
-        gsap.from(".animate-text", { opacity: 0, y: 30, duration: 1, ease: "power2.out", stagger: 0.2 }); // Stagger effect
-        gsap.from(".animate-button", { opacity: 0, scale: 0.8, duration: 0.8, ease: "back.out(1.7)", stagger: 0.3 });
+        const form = document.getElementById('download-form');
+        const progressBar = document.getElementById('progress-bar');
+        const previewDiv = document.getElementById('preview');
 
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+
+            // Reset progress bar and preview
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+            previewDiv.innerHTML = '';
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Network response was not ok");
+                }
+
+                const data = await response.json();
+
+                // Update progress bar (contoh sederhana)
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+
+                // Tampilkan preview
+                if (data.avatar) {
+                   const avatarImg = document.createElement('img');
+                   avatarImg.src = data.avatar;
+                   avatarImg.alt = "Avatar";
+                   avatarImg.style.maxWidth = '100px';
+                   previewDiv.appendChild(avatarImg);
+                }
+
+              const usernameP = document.createElement('p');
+              usernameP.textContent = `Username: ${data.username}`;
+              previewDiv.appendChild(usernameP);
+
+
+                data.urls.forEach(item => {
+                    const previewItem = document.createElement('div');
+                    previewItem.classList.add('preview-item');
+
+                    if (item.type === 'video') {
+                        const video = document.createElement('video');
+                        video.src = item.url;
+                        video.controls = true;
+                        video.style.maxWidth = '100%'; // Agar responsif
+                        previewItem.appendChild(video);
+                    } else { // Anggap sebagai gambar
+                        const img = document.createElement('img');
+                        img.src = item.url;
+                        img.alt = "Preview Image";
+                        img.style.maxWidth = '100%';
+                        previewItem.appendChild(img);
+                    }
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = item.url;
+                    downloadLink.textContent = `Download ${item.type.toUpperCase()}`;
+                    downloadLink.target = '_blank'; // Buka di tab baru
+                    previewItem.appendChild(downloadLink);
+
+                    previewDiv.appendChild(previewItem);
+                });
+
+
+
+            } catch (error) {
+                console.error('Error:', error);
+                previewDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                 progressBar.style.width = '0%';
+                 progressBar.textContent = '0%';
+            }
+        });
     </script>
 </body>
 </html>
