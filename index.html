@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wanzofc Down</title>
+    <title>wanzofc down</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* CSS Reset (Minimal, tambahkan sesuai kebutuhan) */
+        /* CSS Reset (Minimal, expand as needed) */
         * {
             margin: 0;
             padding: 0;
@@ -14,171 +14,164 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font yang lebih modern */
-            background-color: #121212; /* Dark mode background */
-            color: #ffffff;
+            font-family: 'Manrope', sans-serif; /* Modern font */
+            background: linear-gradient(135deg, #1a1a2e, #16213e); /* Gradient background */
+            color: #e0e1dd;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Pastikan elemen selalu di tengah vertikal */
-            padding: 20px; /* Padding untuk konten */
-
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .container {
-            background-color: #1e1e1e; /* Warna kontainer */
-            border-radius: 15px; /* Sudut membulat */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Bayangan halus */
-            padding: 30px; /* Padding dalam kontainer */
-            max-width: 600px; /* Lebar maksimum kontainer */
-            width: 100%; /* Lebar responsif */
-            text-align: center; /* Pusatkan konten */
-
+            background: rgba(30, 30, 46, 0.9); /* Slightly transparent container */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border-radius: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37); /* Subtle shadow */
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
         }
 
         h1 {
-            color: #00bcd4; /* Warna judul */
-            margin-bottom: 25px; /* Jarak bawah judul */
-            font-size: 2.5rem; /* Ukuran font lebih besar */
-            letter-spacing: 1px; /* Jarak antar huruf */
+            color: #cbaacb; /* Lighter title color */
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            letter-spacing: 1.5px;
         }
 
-      #download-form {
-          display: flex;
-          flex-direction: column;
-          align-items: center; /* Pusatkan item secara horizontal */
-          gap: 15px;          /* Beri ruang antar elemen */
+        #download-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
         }
-
 
         label {
-            font-size: 1.1rem;
-            color: #eeeeee;
-            margin-bottom: 8px;
+            font-size: 1.2rem;
+            color: #e0e1dd;
+            margin-bottom: 10px;
         }
-
 
         input[type="text"] {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #333333; /* Border gelap */
-            border-radius: 8px;
-            background-color: #2a2a2a; /* Warna input */
-            color: #ffffff;
-            font-size: 1rem;
-            transition: border-color 0.3s ease; /* Transisi halus */
-            outline: none; /* Hilangkan outline bawaan */
+            padding: 15px;
+            border: none; /* Remove border */
+            border-radius: 12px;
+            background-color: #2a2a40;
+            color: #e0e1dd;
+            font-size: 1.1rem;
+            transition: box-shadow 0.3s ease;
+            outline: none; /* Remove default outline */
         }
 
-          input[type="text"]:focus {
-            border-color: #00bcd4; /* Warna border saat fokus */
-          }
+        input[type="text"]:focus {
+            box-shadow: 0 0 0 3px rgba(203, 170, 203, 0.7); /* Glowing effect */
+        }
 
+        #download-button {
+            background: linear-gradient(135deg, #cbaacb, #94b3fd); /* Gradient button */
+            color: white;
+            border: none;
+            padding: 18px 24px; /* Larger padding */
+            border-radius: 50%; /* Circular button */
+            cursor: pointer;
+            font-size: 1.7rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-flex; /* Center the icon */
+            justify-content: center;
+            align-items: center;
+            width: 65px; /* Fixed width */
+            height: 65px;/* Fixed height */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
-       #download-button {
-          background-color: #00bcd4; /* Warna tombol */
-          color: white;
-          border: none;
-          padding: 15px 20px;  /* Padding lebih besar */
-          border-radius: 50%; /* Bentuk lingkaran */
-          cursor: pointer;
-          font-size: 1.5rem; /* Ukuran ikon lebih besar */
-          transition: background-color 0.3s ease, transform 0.2s ease; /* Efek transisi */
-          display: inline-flex; /* Untuk memusatkan ikon */
-          justify-content: center;
-          align-items: center;
-          width: 55px; /* Lebar tetap */
-          height: 55px;/* Tinggi tetap, sama dengan lebar */
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Bayangan tombol */
-      }
-        /*Hover*/
         #download-button:hover {
-          background-color: #0097a7; /* Warna hover lebih gelap */
-          transform: scale(1.1); /* Sedikit membesar saat hover */
-          }
-
+            transform: scale(1.1);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+        }
 
         #progress-bar-container {
             width: 100%;
-            background-color: #333333; /* Warna latar belakang progress bar */
-            border-radius: 10px; /* Sudut membulat */
-            overflow: hidden; /* Pastikan progress bar di dalam container */
-            margin-top: 20px; /* Jarak atas */
-            height: 30px; /* Tinggi tetap */
+            background-color: #2a2a40;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 25px;
+            height: 35px;
         }
 
         #progress-bar {
             width: 0%;
-            height: 100%; /* Tinggi penuh */
-            background-color: #00bcd4; /* Warna progress */
+            height: 100%;
+            background: linear-gradient(135deg, #94b3fd, #cbaacb); /* Gradient progress */
             text-align: center;
-            line-height: 30px; /* Pusatkan teks vertikal */
+            line-height: 35px;
             color: white;
             font-weight: bold;
-            transition: width 0.3s ease; /* Animasi transisi lebar */
-
         }
 
         #results {
-          margin-top: 30px;
-          text-align: left; /* Rata kiri untuk daftar hasil */
+            margin-top: 35px;
+            text-align: left;
         }
-         #results p {
-              margin-bottom: 8px;
-              color: #cccccc;
-          }
 
+        #results p {
+            margin-bottom: 10px;
+            color: #c0c0c0;
+        }
 
         #results a {
-            color: #00bcd4; /* Warna link */
-            text-decoration: none; /* Hilangkan garis bawah */
-            display: block;  /* Jadikan block agar mudah diklik */
-            margin-bottom: 5px;
-            transition: color 0.2s ease; /* Efek transisi warna */
-            padding: 8px 12px;
-            border-radius: 5px;
-            background-color: #2a2a2a;
-            display: flex; /* Menggunakan flexbox */
-            align-items: center; /* Pusatkan vertikal */
-            justify-content: space-between; /* Ruang di antara ikon dan teks */
+            color: #cbaacb;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+            transition: transform 0.2s ease, color 0.2s ease;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: #2a2a40;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-          #results a:hover {
-              color: #0097a7; /* Warna hover lebih gelap */
-              background-color: #383838;
-           }
+
+        #results a:hover {
+            transform: translateX(5px);
+            color: #94b3fd;
+        }
+
+        #results a i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+        }
 
 
-        /* Ikon Download */
-          #results a i {
-            margin-right: 10px; /* Jarak antara ikon dan teks */
-            font-size: 1.2rem;
-          }
-
-
-        /* Responsif (opsional, sesuaikan) */
+        /* Responsive (optional, but good practice) */
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 30px;
             }
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
-           #download-button{
-              width: 45px;
-              height: 45px;
-              font-size: 1.2rem;
-           }
+             #download-button {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+             }
         }
-
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Wanzofc Down</h1>
+        <h1>WANZOFC DOWN</h1>
         <form id="download-form">
             <label for="url">Instagram URL:</label>
             <input type="text" id="url" name="url" required>
-            <button type="submit" id="download-button"><i class="fas fa-download"></i></button> 
+            <button type="submit" id="download-button"><i class="fas fa-download"></i></button>
         </form>
 
         <div id="progress-bar-container">
@@ -190,93 +183,89 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
-      const form = document.getElementById('download-form');
-      const progressBar = document.getElementById('progress-bar');
-      const resultsDiv = document.getElementById('results');
-      const downloadButton = document.getElementById('download-button')
+        const form = document.getElementById('download-form');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsDiv = document.getElementById('results');
+        const downloadButton = document.getElementById('download-button');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+
+            // Reset and initial animation
+            gsap.set(progressBar, { width: '0%', opacity: 1 }); // Reset GSAP
+            resultsDiv.innerHTML = '';
+            downloadButton.disabled = true; // Disable the button during the process
+            downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Loading spinner
 
 
-      form.addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const url = document.getElementById('url').value;
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Network response was not ok");
+                }
+
+                const data = await response.json();
 
 
-          // Reset dan animasi awal
-          gsap.set(progressBar, { width: '0%', opacity: 1 }); // Reset GSAP
-          resultsDiv.innerHTML = '';
-          downloadButton.disabled = true; // Disable tombol selama proses
-          downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; // Ikon loading
+               // Animate the progress bar with GSAP (simulated progress)
+                gsap.to(progressBar, {
+                    width: '100%',     // Animate to 100%
+                    duration: 1.5,    // Animation duration (adjust as needed)
+                    ease: "power2.out", // Easing function
+                    onUpdate: () => {
+                        //Correct NaN
+                        const progress = progressBar._gsap.progress * 100;
+                         progressBar.textContent = isNaN(progress) ? '0%' : `${Math.floor(progress)}%`;
 
+                    },
+                    onComplete: () => {
+                        // Animation complete: Display the results
+                        if (data.avatar) {
+                            const avatarImage = document.createElement('img');
+                            avatarImage.src = data.avatar;
+                            avatarImage.alt = 'User Avatar';
+                            avatarImage.style.maxWidth = '80px';
+                            avatarImage.style.borderRadius = '50%';
+                            avatarImage.style.border = '3px solid #cbaacb';
+                            avatarImage.style.marginBottom = '10px';
+                            resultsDiv.appendChild(avatarImage);
+                        }
+                        const usernameP = document.createElement('p');
+                        usernameP.textContent = `Username: ${data.username}`;
+                        resultsDiv.appendChild(usernameP);
 
-          try {
-              const response = await fetch('/download', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ url })
-              });
+                        data.urls.forEach(url => {
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.innerHTML = `<i class="fas fa-download"></i> Download`;
+                            link.target = '_blank'; // Open in a new tab
+                            resultsDiv.appendChild(link);
+                        });
 
-              if (!response.ok) {
-                  const errorData = await response.json();
-                  throw new Error(errorData.error || "Network response was not ok");
-              }
-
-
-              const data = await response.json();
-
-              // Animasi progress bar dengan GSAP
-              gsap.to(progressBar, {
-                  width: '100%',
-                  duration: 1.5, // Durasi animasi (sesuaikan)
-                  ease: "power2.out", // Efek easing
-                  onUpdate: () => {
-                      progressBar.textContent = `${Math.round(progressBar._gsap.progress * 100)}%`;
-                  },
-
-                  onComplete: () => {
-                    //Animasi Selesai
-
-                      // Tampilkan hasil
-                      if(data.avatar){
-                         const avatarImage = document.createElement('img');
-                          avatarImage.src = data.avatar;
-                          avatarImage.alt = 'User Avatar';
-                          avatarImage.style.maxWidth = '80px'; // Sesuaikan ukuran avatar
-                          avatarImage.style.borderRadius = '50%';
-                          avatarImage.style.border = '3px solid #00bcd4';
-                          avatarImage.style.marginBottom = '10px'
-                          resultsDiv.appendChild(avatarImage)
-                      }
-                      const usernameP = document.createElement('p');
-                      usernameP.textContent = `Username: ${data.username}`;
-                      resultsDiv.appendChild(usernameP);
-
-                      data.urls.forEach(url => {
-                          const link = document.createElement('a');
-                          link.href = url;
-                          link.innerHTML = `<i class="fas fa-download"></i> Download`; // Ikon Font Awesome
-                          link.target = '_blank';
-                          resultsDiv.appendChild(link);
-                      });
-
-                      downloadButton.disabled = false;
-                      downloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                        downloadButton.disabled = false; // Re-enable the button
+                        downloadButton.innerHTML = '<i class="fas fa-download"></i>'; // Restore the download icon
                     }
-              });
+                });
 
 
 
-
-          } catch (error) {
-              console.error('Error:', error);
-              resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-                gsap.to(progressBar, { width: '0%', duration: 0.5, opacity: 0 }); // Sembunyikan progress bar
-                downloadButton.disabled = false; // Aktifkan kembali
-                downloadButton.innerHTML = '<i class="fas fa-download"></i>'; // Kembalikan ikon download
-          }
-      });
-
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                gsap.to(progressBar, { width: '0%', duration: 0.5, opacity: 0 }); // Hide progress bar
+                downloadButton.disabled = false; // Re-enable button
+                downloadButton.innerHTML = '<i class="fas fa-download"></i>'; // Restore icon
+            }
+        });
     </script>
 </body>
 </html>
