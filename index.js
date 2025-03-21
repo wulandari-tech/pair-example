@@ -1,4 +1,3 @@
-// server.js (Tidak banyak perubahan dari sebelumnya)
 const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
@@ -8,7 +7,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json()); //  Handle JSON requests
 app.use(express.static(path.join(__dirname)));
 
 const snapinst = {
@@ -21,16 +20,16 @@ const snapinst = {
             form.append('url', url);
             form.append('action', 'post');
             form.append('lang', '');
-            form.append('cf-turnstile-response', ''); // Hapus kalau ada error
+            form.append('cf-turnstile-response', ''); // Remove if causing errors
             form.append('token', $('input[name=token]').attr('value'));
 
             const headers = {
                 ...form.getHeaders(),
                 'accept': '*/*',
                 'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-                 'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', // Update jika diperlukan
+                'sec-ch-ua': '"Not A(Brand";v="8", "Chromium";v="132"', //Update if needed
                 'sec-ch-ua-mobile': '?1',
-                'sec-ch-ua-platform': '"Android"', // Update jika diperlukan
+                'sec-ch-ua-platform': '"Android"',  // Update if needed
                 'sec-fetch-dest': 'empty',
                 'sec-fetch-mode': 'cors',
                 'sec-fetch-site': 'same-origin',
@@ -56,13 +55,13 @@ const snapinst = {
             };
             _('.row .download-item').each((i, e) => {
                 const url = _(e).find('.download-bottom a').attr('href');
-                res.urls.push(url); // Hanya simpan URL, tidak perlu cek tipe di server
+                res.urls.push(url); // Only store the URL
             });
 
             return res;
         } catch (error) {
             console.error("Error in snapinst.app:", error);
-            throw error;
+            throw error; // Re-throw for handling in the route
         }
     },
 };
@@ -71,21 +70,23 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+//  Handle the download request and send JSON
 app.post('/download', async (req, res) => {
     try {
         const instagramUrl = req.body.url;
         if (!instagramUrl) {
-            return res.status(400).json({ error: "URL Instagram tidak boleh kosong." });
+            return res.status(400).json({ error: "Instagram URL cannot be empty." });
         }
 
         const result = await snapinst.app(instagramUrl);
-        res.json(result);
+        res.json(result); // Send the result as JSON
 
     } catch (error) {
-        res.status(500).json({ error: "Terjadi kesalahan: " + error.message });
+        res.status(500).json({ error: "An error occurred: " + error.message });
     }
 });
 
+
 app.listen(port, () => {
-    console.log(`Server berjalan di http://localhost:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
