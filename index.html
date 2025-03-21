@@ -39,35 +39,45 @@
             margin-bottom: 30px;
             font-size: 2.8rem;
             letter-spacing: 1.5px;
+            display: flex;        
+            align-items: center;  
+            justify-content: center; 
+            gap: 15px;           
         }
 
-        .input-group {  /* Grouping for form elements */
-             display: flex;
+        h1 i {
+          font-size: 2.5rem; 
+        }
+
+        .input-group {
+            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
             margin-bottom: 20px;
         }
-        .input-group label{
-           font-size: 1.2rem;
-           color: #e0e1dd;
-           margin-bottom: 10px;
+
+        .input-group label {
+            font-size: 1.2rem;
+            color: #e0e1dd;
+            margin-bottom: 10px;
         }
 
-        .input-group input[type="text"]{
-          width: 100%;
-          padding: 15px;
-          border: none; /* Remove border */
-          border-radius: 12px;
-          background-color: #2a2a40;
-          color: #e0e1dd;
-          font-size: 1.1rem;
-          transition: box-shadow 0.3s ease;
-          outline: none; /* Remove default outline */
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background-color: #2a2a40;
+            color: #e0e1dd;
+            font-size: 1.1rem;
+            transition: box-shadow 0.3s ease;
+            outline: none;
         }
-         .input-group input[type="text"]:focus{
-           box-shadow: 0 0 0 3px rgba(203, 170, 203, 0.7); /* Glowing effect */
-         }
+
+        .input-group input[type="text"]:focus {
+            box-shadow: 0 0 0 3px rgba(203, 170, 203, 0.7);
+        }
 
         .input-group button {
             background: linear-gradient(135deg, #cbaacb, #94b3fd);
@@ -91,7 +101,6 @@
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
         }
 
-        /* Progress bar */
         .progress-bar-container {
             width: 100%;
             background-color: #2a2a40;
@@ -99,10 +108,11 @@
             overflow: hidden;
             margin-top: 25px;
             height: 35px;
-            display: none; /* Initially hidden */
+            display: none;
         }
-        .progress-bar-container.active{
-           display: block;
+
+        .progress-bar-container.active {
+            display: block;
         }
 
         .progress-bar {
@@ -115,7 +125,6 @@
             font-weight: bold;
         }
 
-        /* Results */
         #results {
             margin-top: 35px;
             text-align: left;
@@ -124,6 +133,13 @@
         #results p {
             margin-bottom: 10px;
             color: #c0c0c0;
+        }
+        #results .result-item{
+          margin-bottom: 15px;
+          padding: 10px;
+          border-radius: 8px;
+          background-color: #2a2a40;
+          box-shadow: 0 2px 8px rgba(0,0,0, 0.15);
         }
 
         #results a {
@@ -151,14 +167,13 @@
             font-size: 1.3rem;
         }
 
-         #results img {
+        #results img {
             margin-bottom: 10px;
-            border-radius: 50%;        /* Circular avatar */
-            border: 3px solid #cbaacb; /* Border for avatar */
-            max-width: 80px;         /* Limit avatar size */
+            border-radius: 50%;
+            border: 3px solid #cbaacb;
+            max-width: 80px;
         }
 
-        /* Tabs */
         .tabs {
             display: flex;
             justify-content: center;
@@ -168,27 +183,35 @@
         .tab {
             padding: 10px 20px;
             border: 2px solid #3a3a50;
-            border-radius: 8px 8px 0 0; /* Rounded top corners */
+            border-radius: 8px 8px 0 0;
             cursor: pointer;
             background-color: #2a2a40;
             color: #c0c0c0;
             margin: 0 5px;
             transition: background-color 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .tab.active {
             background-color: #3a3a50;
             color: #e0e1dd;
-            border-bottom-color: #3a3a50; /* Hide bottom border */
-        }
-        .tab-content {
-          display: none;  /* Hide all content initially */
-        }
-        .tab-content.active{
-           display: block; /* Show active content */
+            border-bottom-color: #3a3a50;
         }
 
-        /* Responsive */
+        .tab i {
+            font-size: 1.2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 30px;
@@ -202,25 +225,25 @@
                 font-size: 1.5rem;
             }
             .tabs{
-              flex-direction: column; /* Stack tabs vertically */
+              flex-direction: column;
               align-items: center;
             }
             .tab{
               width: 100%;
-              border-radius: 8px; /* Fully rounded */
+              border-radius: 8px;
               margin-bottom: 5px;
             }
         }
     </style>
-     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>WANZOFC DOWN</h1>
-
+        <h1><i class="fas fa-cloud-download-alt"></i> WANZOFC DOWN</h1>
         <div class="tabs">
-            <div class="tab active" data-tab="instagram">INSTAGRAM</div>
-            <div class="tab" data-tab="spotify">SPOTIFY</div>
+            <div class="tab active" data-tab="instagram"><i class="fab fa-instagram"></i> INSTAGRAM</div>
+            <div class="tab" data-tab="spotify"><i class="fab fa-spotify"></i> SPOTIFY</div>
+            <div class="tab" data-tab="tiktok"><i class="fab fa-tiktok"></i> TIKTOK</div>
         </div>
         <div class="tab-content active" id="instagram-content">
             <form id="instagram-form" class="input-group">
@@ -228,7 +251,7 @@
                 <input type="text" id="instagram-url" name="url" required>
                 <button type="submit" id="instagram-download-button"><i class="fas fa-download"></i></button>
             </form>
-              <div class="progress-bar-container" id="instagram-progress-container">
+            <div class="progress-bar-container" id="instagram-progress-container">
                 <div class="progress-bar" id="instagram-progress-bar">0%</div>
             </div>
         </div>
@@ -238,189 +261,288 @@
                 <input type="text" id="spotify-url" name="url" required>
                 <button type="submit" id="spotify-download-button"><i class="fas fa-download"></i></button>
             </form>
-              <div class="progress-bar-container" id="spotify-progress-container">
-                 <div class="progress-bar" id="spotify-progress-bar">0%</div>
-              </div>
+            <div class="progress-bar-container" id="spotify-progress-container">
+                <div class="progress-bar" id="spotify-progress-bar">0%</div>
+            </div>
         </div>
-        <div id="results"></div> 
+        <div class="tab-content" id="tiktok-content">
+            <form id="tiktok-form" class="input-group">
+                <label for="tiktok-url">tiktok url:</label>
+                <input type="text" id="tiktok-url" name="url" required>
+                <button type="submit" id="tiktok-download-button"><i class="fas fa-download"></i></button>
+            </form>
+            <div class="progress-bar-container" id="tiktok-progress-container">
+                <div class="progress-bar" id="tiktok-progress-bar">0%</div>
+            </div>
+        </div>
+        <div id="results"></div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
-       const instagramForm = document.getElementById('instagram-form');
-       const instagramProgressBar = document.getElementById('instagram-progress-bar');
-       const instagramProgressContainer = document.getElementById('instagram-progress-container');
-       const instagramDownloadButton = document.getElementById('instagram-download-button');
+        function displayResults(data, type) {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
 
-       const spotifyForm = document.getElementById('spotify-form');
-       const spotifyProgressBar = document.getElementById('spotify-progress-bar');
-       const spotifyProgressContainer = document.getElementById('spotify-progress-container')
-       const spotifyDownloadButton = document.getElementById('spotify-download-button');
-
-       const resultsDiv = document.getElementById('results');
-
-       
-       instagramForm.addEventListener('submit', async (e) => {
-           e.preventDefault();
-           const url = document.getElementById('instagram-url').value;
-
-           gsap.set(instagramProgressBar, { width: '0%', opacity: 1 });
-           resultsDiv.innerHTML = ''; // Clear previous results
-           instagramDownloadButton.disabled = true;
-           instagramDownloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-           instagramProgressContainer.classList.add('active'); // Show progress bar
-
-           try {
-               const response = await fetch('/download', { // Use /download for Instagram
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify({ url })
-               });
-
-               if (!response.ok) {
-                   const errorData = await response.json();
-                   throw new Error(errorData.error || "Network response was not ok");
-               }
-
-               const data = await response.json();
-
-               let currentProgress = 0;
-               const progressInterval = setInterval(() => {
-                   currentProgress += 10;
-                   if (currentProgress > 100) {
-                       currentProgress = 100;
-                       clearInterval(progressInterval);
-
-                       if (data.avatar) {
-                           const avatarImage = document.createElement('img');
-                           avatarImage.src = data.avatar;
-                           avatarImage.alt = 'User Avatar';
-                           resultsDiv.appendChild(avatarImage); // Append directly
-                       }
-                       const usernameP = document.createElement('p');
-                       usernameP.textContent = `Username: ${data.username}`;
-                       resultsDiv.appendChild(usernameP);
-
-                       data.urls.forEach(url => {
-                           const link = document.createElement('a');
-                           link.href = url;
-                           link.innerHTML = `<i class="fas fa-download"></i> Download`;
-                           link.target = '_blank';
-                           resultsDiv.appendChild(link);
-                       });
-
-                       instagramDownloadButton.disabled = false;
-                       instagramDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
-                        instagramProgressContainer.classList.remove('active');
-                   }
-
-                   gsap.to(instagramProgressBar, {
-                       width: `${currentProgress}%`,
-                       duration: 0.1,
-                       ease: "power1.out",
-                       onUpdate: () => {
-                           instagramProgressBar.textContent = `${Math.floor(currentProgress)}%`;
-                       }
-                   });
-               }, 200);
-
-           } catch (error) {
-               console.error('Error:', error);
-               resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-                gsap.to(instagramProgressBar, { width: '0%', duration: 0.5, opacity: 0 });
-               instagramDownloadButton.disabled = false;
-               instagramDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
-               instagramProgressContainer.classList.remove('active');
-           }
-       });
-       spotifyForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const url = document.getElementById('spotify-url').value;
-
-
-            gsap.set(spotifyProgressBar, { width: '0%', opacity: 1 });
-            resultsDiv.innerHTML = '';  //Clear previous results
-            spotifyDownloadButton.disabled = true;
-            spotifyDownloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            spotifyProgressContainer.classList.add('active');
-
-            try{
-                const response = await fetch('/spotify-download', {
-                   method: 'POST',
-                   headers:{
-                    'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify({url})
+            if (type === 'instagram') {
+                if (data.avatar) {
+                    const avatarImage = document.createElement('img');
+                    avatarImage.src = data.avatar;
+                    avatarImage.alt = 'User Avatar';
+                    resultItem.appendChild(avatarImage);
+                }
+                const usernameP = document.createElement('p');
+                usernameP.textContent = `Username: ${data.username}`;
+                resultItem.appendChild(usernameP);
+                data.urls.forEach(url => {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.innerHTML = `<i class="fas fa-download"></i> Download`;
+                    link.target = '_blank';
+                    resultItem.appendChild(link);
                 });
 
-                if(!response.ok){
-                   const errorData = await response.json();
-                   throw new Error(errorData.error || "Network response was not ok");
+
+            } else if (type === 'spotify') {
+                if (data.cover_url) {
+                    const coverImage = document.createElement('img');
+                    coverImage.src = data.cover_url;
+                    coverImage.alt = 'Album Cover';
+                    resultItem.appendChild(coverImage);
+                }
+                const titleP = document.createElement('p');
+                titleP.textContent = `Title: ${data.title}`;
+                resultItem.appendChild(titleP);
+                const artistsP = document.createElement('p');
+                artistsP.textContent = `Artists: ${data.artists}`;
+                resultItem.appendChild(artistsP);
+
+                if (data.downloadLink && data.downloadLink.url) {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = data.downloadLink.url;
+                    downloadLink.innerHTML = `<i class="fas fa-download"></i> Download`;
+                    downloadLink.target = '_blank';
+                    resultItem.appendChild(downloadLink);
+                }
+            } else if (type === 'tiktok') {
+                const titleP = document.createElement('p');
+                titleP.textContent = `Title: ${data.title || 'N/A'}`;
+                resultItem.appendChild(titleP);
+
+                if (data.thumbnail) {
+                    const thumbnailImg = document.createElement('img');
+                    thumbnailImg.src = data.thumbnail;
+                    thumbnailImg.alt = 'Thumbnail';
+                    thumbnailImg.style.maxWidth = '100%';
+                    resultItem.appendChild(thumbnailImg);
+                }
+
+                data.medias.forEach(media => {
+                   if(media.url){
+                    const link = document.createElement('a');
+                    link.href = media.url;
+                    link.innerHTML = `<i class="fas fa-download"></i> Download ${media.quality} (${media.extension})`;
+                    link.target = '_blank';
+                    resultItem.appendChild(link);
+                   }
+                });
+            }
+
+            resultsDiv.appendChild(resultItem);
+        }
+
+        const instagramForm = document.getElementById('instagram-form');
+        const instagramProgressBar = document.getElementById('instagram-progress-bar');
+        const instagramProgressContainer = document.getElementById('instagram-progress-container');
+        const instagramDownloadButton = document.getElementById('instagram-download-button');
+
+        const spotifyForm = document.getElementById('spotify-form');
+        const spotifyProgressBar = document.getElementById('spotify-progress-bar');
+        const spotifyProgressContainer = document.getElementById('spotify-progress-container');
+        const spotifyDownloadButton = document.getElementById('spotify-download-button');
+
+        const tiktokForm = document.getElementById('tiktok-form');
+        const tiktokProgressBar = document.getElementById('tiktok-progress-bar');
+        const tiktokProgressContainer = document.getElementById('tiktok-progress-container');
+        const tiktokDownloadButton = document.getElementById('tiktok-download-button');
+
+        const resultsDiv = document.getElementById('results');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        instagramForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('instagram-url').value;
+
+            gsap.set(instagramProgressBar, { width: '0%', opacity: 1 });
+            resultsDiv.innerHTML = '';
+            instagramDownloadButton.disabled = true;
+            instagramDownloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            instagramProgressContainer.classList.add('active');
+
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Network response was not ok");
                 }
 
                 const data = await response.json();
 
                 let currentProgress = 0;
-                const progressInterval = setInterval(()=>{
+                const progressInterval = setInterval(() => {
                     currentProgress += 10;
-                    if(currentProgress > 100){
-                       currentProgress = 100;
-                       clearInterval(progressInterval);
-                        if (data.cover_url) {
-                            const coverImage = document.createElement('img');
-                            coverImage.src = data.cover_url;
-                            coverImage.alt = 'Album Cover';
-                            resultsDiv.appendChild(coverImage);
-                        }
-
-                        const titleP = document.createElement('p');
-                        titleP.textContent = `Title: ${data.title}`;
-                        resultsDiv.appendChild(titleP);
-
-                        const artistsP = document.createElement('p');
-                        artistsP.textContent = `Artists: ${data.artists}`;
-                        resultsDiv.appendChild(artistsP);
-
-
-                        if (data.downloadLink && data.downloadLink.url) {
-                            const downloadLink = document.createElement('a');
-                            downloadLink.href = data.downloadLink.url;
-                            downloadLink.innerHTML = `<i class="fas fa-download"></i> Download`;
-                            downloadLink.target = '_blank';
-                            resultsDiv.appendChild(downloadLink);
-                        }
-
-
-                        spotifyDownloadButton.disabled = false;
-                        spotifyDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
-                         spotifyProgressContainer.classList.remove('active');
+                    if (currentProgress > 100) {
+                        currentProgress = 100;
+                        clearInterval(progressInterval);
+                        displayResults(data, 'instagram');
+                        instagramDownloadButton.disabled = false;
+                        instagramDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                        instagramProgressContainer.classList.remove('active');
                     }
 
-                    //Update progress with gsap
+                    gsap.to(instagramProgressBar, {
+                        width: `${currentProgress}%`,
+                        duration: 0.1,
+                        ease: "power1.out",
+                        onUpdate: () => {
+                            instagramProgressBar.textContent = `${Math.floor(currentProgress)}%`;
+                        }
+                    });
+                }, 200);
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                gsap.to(instagramProgressBar, { width: '0%', duration: 0.5, opacity: 0 });
+                instagramDownloadButton.disabled = false;
+                instagramDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                instagramProgressContainer.classList.remove('active');
+            }
+        });
+
+        spotifyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('spotify-url').value;
+
+            gsap.set(spotifyProgressBar, { width: '0%', opacity: 1 });
+            resultsDiv.innerHTML = '';
+            spotifyDownloadButton.disabled = true;
+            spotifyDownloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            spotifyProgressContainer.classList.add('active');
+
+            try {
+                const response = await fetch('/spotify-download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Network response was not ok');
+                }
+
+                const data = await response.json();
+                let currentProgress = 0;
+
+                const progressInterval = setInterval(() => {
+                    currentProgress += 10;
+                    if (currentProgress > 100) {
+                        currentProgress = 100;
+                        clearInterval(progressInterval);
+                        displayResults(data, 'spotify');
+                        spotifyDownloadButton.disabled = false;
+                        spotifyDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                        spotifyProgressContainer.classList.remove('active');
+                    }
+
                     gsap.to(spotifyProgressBar, {
                         width: `${currentProgress}%`,
                         duration: 0.1,
                         ease: 'power1.out',
                         onUpdate: () => {
-                           spotifyProgressBar.textContent = `${Math.floor(currentProgress)}%`
+                            spotifyProgressBar.textContent = `${Math.floor(currentProgress)}%`;
                         }
-                    })
-                }, 200) 
+                    });
 
-            } catch(error){
-              console.error('Error:', error);
-              resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
-              gsap.to(spotifyProgressBar, { width: '0%', duration: 0.5, opacity: 0 });
-              spotifyDownloadButton.disabled = false;
-              spotifyDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
-              spotifyProgressContainer.classList.remove('active');
+                }, 200);
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                gsap.to(spotifyProgressBar, { width: '0%', duration: 0.5, opacity: 0 });
+                spotifyDownloadButton.disabled = false;
+                spotifyDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                spotifyProgressContainer.classList.remove('active');
             }
+        });
 
-       });
-        const tabs = document.querySelectorAll('.tab');
-        const tabContents = document.querySelectorAll('.tab-content');
+        tiktokForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('tiktok-url').value;
+
+            gsap.set(tiktokProgressBar, { width: '0%', opacity: 1 });
+            resultsDiv.innerHTML = '';
+            tiktokDownloadButton.disabled = true;
+            tiktokDownloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            tiktokProgressContainer.classList.add('active');
+
+            try {
+                const response = await fetch('/tiktok-download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Network response was not ok');
+                }
+
+                const data = await response.json();
+                let currentProgress = 0;
+                const progressInterval = setInterval(() => {
+                    currentProgress += 10;
+                    if (currentProgress > 100) {
+                        currentProgress = 100;
+                        clearInterval(progressInterval);
+                        displayResults(data, 'tiktok');
+                        tiktokDownloadButton.disabled = false;
+                        tiktokDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                        tiktokProgressContainer.classList.remove('active');
+
+                    }
+
+                    gsap.to(tiktokProgressBar, {
+                        width: `${currentProgress}%`,
+                        duration: 0.1,
+                        ease: 'power1.out',
+                        onUpdate: () => {
+                            tiktokProgressBar.textContent = `${Math.floor(currentProgress)}%`;
+                        }
+                    });
+                }, 200);
+
+            } catch (error) {
+                console.error('Error: ', error);
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                gsap.to(tiktokProgressBar, { width: '0%', duration: 0.5, opacity: 0 });
+                tiktokDownloadButton.disabled = false;
+                tiktokDownloadButton.innerHTML = '<i class="fas fa-download"></i>';
+                tiktokProgressContainer.classList.remove('active');
+            }
+        });
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => t.classList.remove('active'));
@@ -430,7 +552,7 @@
                 resultsDiv.innerHTML = '';
             });
         });
-
+        gsap.from(".container", { opacity: 0, y: -50, duration: 1, ease: "power2.out", delay: 0.2 });
     </script>
 </body>
 </html>
